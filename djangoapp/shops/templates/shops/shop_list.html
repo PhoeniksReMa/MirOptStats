@@ -1,34 +1,41 @@
-{% extends 'base.html' %}
+{% extends 'base_app.html' %}
 
 {% block title %}Shops{% endblock %}
+{% block page_title %}Обзор{% endblock %}
 
 {% block content %}
-<h1>My shops</h1>
+<div class="card">
+    <h2>Мои магазины</h2>
+    {% if owned_shops %}
+    <table>
+        <tr><th>Название</th><th>Маркетплейс</th><th>Действия</th></tr>
+        {% for shop in owned_shops %}
+        <tr>
+            <td>{{ shop.name }}</td>
+            <td>{{ shop.get_marketplace_display }}</td>
+            <td><a href="{% url 'shops:add_employee' shop.id %}">Сотрудники</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>Пока нет созданных магазинов.</p>
+    {% endif %}
+</div>
 
-<h2>Owned</h2>
-{% if owned_shops %}
-<table>
-    <tr><th>Name</th><th>Marketplace</th><th>Actions</th></tr>
-    {% for shop in owned_shops %}
-    <tr>
-        <td>{{ shop.name }}</td>
-        <td>{{ shop.get_marketplace_display }}</td>
-        <td><a href="{% url 'shops:add_employee' shop.id %}">Add employee</a></td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>You do not own any shops yet.</p>
-{% endif %}
-
-<h2>Where I'm employee</h2>
-{% if member_shops %}
-<ul>
-    {% for shop in member_shops %}
-    <li>{{ shop.name }} ({{ shop.get_marketplace_display }})</li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No memberships yet.</p>
-{% endif %}
+<div class="card">
+    <h2>Где я сотрудник</h2>
+    {% if member_shops %}
+    <table>
+        <tr><th>Название</th><th>Маркетплейс</th></tr>
+        {% for shop in member_shops %}
+        <tr>
+            <td>{{ shop.name }}</td>
+            <td>{{ shop.get_marketplace_display }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>Нет активных приглашений.</p>
+    {% endif %}
+</div>
 {% endblock %}

@@ -1,12 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'base_app.html' %}
 
 {% block title %}Create shop{% endblock %}
+{% block page_title %}Добавить магазин{% endblock %}
 
 {% block content %}
-<h1>Create shop</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-</form>
+<div class="card">
+    <form method="post" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit">Добавить магазин</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

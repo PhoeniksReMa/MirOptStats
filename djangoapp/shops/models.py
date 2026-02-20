@@ -3,38 +3,43 @@ from django.db import models
 
 
 class Role(models.TextChoices):
-    ADMIN = "admin", "Admin"
-    MANAGER = "manager", "Manager"
-    EMPLOYEE = "employee", "Employee"
+    ADMIN = "admin", "Администратор"
+    MANAGER = "manager", "Менеджер"
+    EMPLOYEE = "employee", "Сотрудник"
 
 
 class MarketplaceChoice(models.TextChoices):
     OZON = "ozon", "Ozon"
     WILDBERRIES = "wildberries", "Wildberries"
-    YANDEX_MARKET = "yandex_market", "Yandex Market"
-    OTHER = "other", "Other"
+    YANDEX_MARKET = "yandex_market", "Яндекс Маркет"
+    OTHER = "other", "Другое"
 
 
 class Shop(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name="Название магазина")
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="owned_shops",
+        verbose_name="Владелец",
     )
     marketplace = models.CharField(
         max_length=40,
         choices=MarketplaceChoice.choices,
-        default=MarketplaceChoice.OTHER,
+        default=MarketplaceChoice.OZON,
+        verbose_name="Маркетплейс",
     )
     token = models.CharField(
-        max_length=40
+        max_length=40,
+        verbose_name="Токен",
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлено")
 
     class Meta:
         ordering = ["name"]
+        verbose_name = "магазин"
+        verbose_name_plural = "магазины"
 
     def __str__(self) -> str:
         return f"{self.name} (owner: {self.owner.username})"
@@ -61,25 +66,33 @@ class ShopMembership(models.Model):
         Shop,
         on_delete=models.CASCADE,
         related_name="memberships",
+        verbose_name="Магазин",
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="shop_memberships",
+        verbose_name="Пользователь",
     )
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.EMPLOYEE)
-    can_view_stats = models.BooleanField(default=True)
-    can_edit_shop = models.BooleanField(default=False)
-    can_manage_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.EMPLOYEE,
+        verbose_name="Роль",
+    )
+    can_view_stats = models.BooleanField(default=True, verbose_name="Доступ к статистике")
+    can_edit_shop = models.BooleanField(default=False, verbose_name="Право редактировать магазин")
+    can_manage_staff = models.BooleanField(default=False, verbose_name="Право управлять персоналом")
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
     invited_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name="created_memberships",
         null=True,
         blank=True,
+        verbose_name="Кто добавил",
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Добавлен")
 
     class Meta:
         constraints = [
@@ -89,6 +102,8 @@ class ShopMembership(models.Model):
             ),
         ]
         ordering = ["shop", "user"]
+        verbose_name = "сотрудник магазина"
+        verbose_name_plural = "сотрудники магазинов"
 
     def __str__(self) -> str:
         return f"{self.user.username} in {self.shop.name} ({self.role})"

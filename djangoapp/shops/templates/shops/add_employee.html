@@ -1,28 +1,35 @@
-{% extends 'base.html' %}
+{% extends 'base_app.html' %}
 
 {% block title %}Add employee{% endblock %}
+{% block page_title %}Сотрудники{% endblock %}
 
 {% block content %}
-<h1>Add employee to {{ shop.name }}</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+<div class="card">
+    <h2>Добавить сотрудника в {{ shop.name }}</h2>
+    <form method="post" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit">Сохранить</button>
+        </div>
+    </form>
+</div>
 
-<h2>Current staff</h2>
-{% if memberships %}
-<table>
-    <tr><th>User</th><th>Role</th><th>Can manage staff</th></tr>
-    {% for membership in memberships %}
-    <tr>
-        <td>{{ membership.user.username }}</td>
-        <td>{{ membership.get_role_display }}</td>
-        <td>{{ membership.can_manage_staff|yesno:"Yes,No" }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No active staff yet.</p>
-{% endif %}
+<div class="card">
+    <h2>Текущие сотрудники</h2>
+    {% if memberships %}
+    <table>
+        <tr><th>Пользователь</th><th>Роль</th><th>Управление</th></tr>
+        {% for membership in memberships %}
+        <tr>
+            <td>{{ membership.user.username }}</td>
+            <td>{{ membership.get_role_display }}</td>
+            <td>{{ membership.can_manage_staff|yesno:"Да,Нет" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>Нет активных сотрудников.</p>
+    {% endif %}
+</div>
 {% endblock %}

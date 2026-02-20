@@ -10,14 +10,23 @@ class ShopCreateForm(forms.ModelForm):
     class Meta:
         model = Shop
         fields = ("name", "marketplace", "token")
+        labels = {
+            "name": "Название магазина",
+            "marketplace": "Маркетплейс",
+            "token": "Токен",
+        }
 
 
 class AddEmployeeForm(forms.Form):
-    username = forms.CharField(max_length=150, help_text="Existing user's username")
-    role = forms.ChoiceField(choices=Role.choices, initial=Role.EMPLOYEE)
-    can_view_stats = forms.BooleanField(required=False, initial=True)
-    can_edit_shop = forms.BooleanField(required=False, initial=False)
-    can_manage_staff = forms.BooleanField(required=False, initial=False)
+    username = forms.CharField(
+        max_length=150,
+        label="Логин пользователя",
+        help_text="Существующий логин пользователя",
+    )
+    role = forms.ChoiceField(choices=Role.choices, initial=Role.EMPLOYEE, label="Роль")
+    can_view_stats = forms.BooleanField(required=False, initial=True, label="Доступ к статистике")
+    can_edit_shop = forms.BooleanField(required=False, initial=False, label="Право редактировать магазин")
+    can_manage_staff = forms.BooleanField(required=False, initial=False, label="Право управлять персоналом")
 
     def __init__(self, *args, **kwargs):
         self.shop = kwargs.pop("shop")
@@ -28,10 +37,10 @@ class AddEmployeeForm(forms.Form):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist as exc:
-            raise forms.ValidationError("User with this username does not exist") from exc
+            raise forms.ValidationError("Пользователь с таким логином не найден") from exc
 
         if self.shop.owner_id == user.id:
-            raise forms.ValidationError("Owner is already assigned to this shop")
+            raise forms.ValidationError("Владелец уже закреплен за этим магазином")
         return username
 
     def save(self, invited_by):

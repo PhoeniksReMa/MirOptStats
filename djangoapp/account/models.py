@@ -7,8 +7,8 @@ class User(AbstractUser):
     Main user entity.
     Any user can own stores and can also be a staff member in someone else's store.
     """
-    email_verified = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=False, verbose_name="Email подтвержден")
 
     class Meta:
-        verbose_name = "user"
-        verbose_name_plural = "users"
+        verbose_name = "пользователь"
+        verbose_name_plural = "пользователи"

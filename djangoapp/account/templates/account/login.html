@@ -1,13 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h1>Login</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign in</button>
-</form>
-<p><a href="{% url 'account:password_reset' %}">Forgot password?</a></p>
+<div class="auth-card">
+    <div class="brand">
+        <div class="brand-badge"></div>
+        <div>MirOpt Stats</div>
+    </div>
+    <h1 class="auth-title">Вход в аккаунт</h1>
+    <form method="post" class="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit">Войти</button>
+        </div>
+    </form>
+    <div class="auth-footer">
+        <a href="{% url 'account:password_reset' %}">Забыли пароль?</a>
+        <div>Нет аккаунта? <a href="{% url 'account:register' %}">Регистрация</a></div>
+    </div>
+</div>
 {% endblock %}
