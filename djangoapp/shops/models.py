@@ -27,6 +27,9 @@ class Shop(models.Model):
         choices=MarketplaceChoice.choices,
         default=MarketplaceChoice.OTHER,
     )
+    token = models.CharField(
+        max_length=40
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

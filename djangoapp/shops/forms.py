@@ -9,7 +9,7 @@ User = get_user_model()
 class ShopCreateForm(forms.ModelForm):
     class Meta:
         model = Shop
-        fields = ("name", "marketplace")
+        fields = ("name", "marketplace", "token")
 
 
 class AddEmployeeForm(forms.Form):

@@ -1,0 +1,6 @@
+Hello {{ user.username }},
+
+Please confirm your email by clicking the link below:
+{{ verify_url }}
+
+If you did not sign up, you can ignore this email.
