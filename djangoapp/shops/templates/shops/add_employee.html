@@ -19,10 +19,10 @@
     <h2>Текущие сотрудники</h2>
     {% if memberships %}
     <table>
-        <tr><th>Пользователь</th><th>Роль</th><th>Управление</th></tr>
+        <tr><th>Email</th><th>Роль</th><th>Управление</th></tr>
         {% for membership in memberships %}
         <tr>
-            <td>{{ membership.user.username }}</td>
+            <td>{{ membership.user.email }}</td>
             <td>{{ membership.get_role_display }}</td>
             <td>{{ membership.can_manage_staff|yesno:"Да,Нет" }}</td>
         </tr>

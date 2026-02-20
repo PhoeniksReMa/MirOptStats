@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MirOptStats{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+<div class="page">
+    <div class="layout">
+        <aside class="sidebar">
+            <a class="brand" href="{% url 'shops:list' %}">
+                <div class="brand-badge"></div>
+                <div>MirOpt Stats</div>
+            </a>
+                <nav class="nav">
+                    <a href="{% url 'shops:list' %}">Магазины</a>
+                    <a href="{% url 'shops:create' %}">Добавить магазин</a>
+                <form method="post" action="{% url 'account:logout' %}">
+                    {% csrf_token %}
+                        <button type="submit">Выйти</button>
+                </form>
+            </nav>
+        </aside>
+        <div class="content">
+            <div class="topbar">
+                <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+
+:root {
+    --bg: #eef3fb;
+    --card: #ffffff;
+    --card-border: #e6edf6;
+    --text: #1f2a44;
+    --muted: #6b7a99;
+    --primary: #1d66d1;
+    --primary-dark: #0f4fb3;
+    --shadow: 0 18px 35px rgba(31, 42, 68, 0.12);
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    background: radial-gradient(1200px 500px at 50% -10%, #f8fbff 0%, var(--bg) 60%);
+    color: var(--text);
+}
+a { color: var(--primary); text-decoration: none; }
+.page { min-height: 100vh; }
+
+.auth-main {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 40px 20px;
+}
+.auth-card {
+    width: 100%;
+    max-width: 540px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 28px 36px 32px;
+}
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+.brand-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f2a65a, #4b9dff);
+    box-shadow: 0 6px 12px rgba(29, 102, 209, 0.2);
+}
+.auth-title { text-align: center; font-size: 22px; margin: 6px 0 18px; }
+.form p { margin: 0 0 14px; }
+label { font-weight: 600; font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    font: inherit;
+    background: #fbfdff;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #9cb8ef;
+    box-shadow: 0 0 0 3px rgba(29, 102, 209, 0.12);
+}
+button {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+}
+button:hover { background: var(--primary-dark); }
+.form-actions { margin-top: 10px; }
+.auth-footer {
+    text-align: center;
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+}
+.sidebar {
+    background: linear-gradient(180deg, #2c4b7a 0%, #1e3b66 100%);
+    color: #eaf1ff;
+    padding: 24px 18px;
+}
+.sidebar .brand {
+    justify-content: flex-start;
+    color: #eaf1ff;
+    margin-bottom: 28px;
+}
+.nav {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+.nav a, .nav form button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: #eaf1ff;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.nav a:hover, .nav form button:hover { background: rgba(255, 255, 255, 0.12); }
+.content { padding: 28px 32px; }
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.topbar h1 { margin: 0; font-size: 22px; }
+.card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 18px;
+}
+.messages { list-style: none; padding: 0; margin: 0 0 18px; }
+.messages li { padding: 10px 12px; border-radius: 8px; background: #eef3ff; }
+.button-link {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-weight: 700;
+}
+.button-link:hover { background: var(--primary-dark); color: #fff; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #e7edf7; padding: 10px 8px; text-align: left; }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+@media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+}

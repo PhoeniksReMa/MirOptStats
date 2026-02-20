@@ -1,6 +1,6 @@
-Hello {{ user.username }},
+Здравствуйте, {{ user.email }}!
 
-Please confirm your email by clicking the link below:
+Пожалуйста, подтвердите ваш e-mail, перейдя по ссылке:
 {{ verify_url }}
 
-If you did not sign up, you can ignore this email.
+Если вы не регистрировались, просто проигнорируйте это письмо.

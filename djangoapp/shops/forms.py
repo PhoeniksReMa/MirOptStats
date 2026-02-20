@@ -18,10 +18,9 @@ class ShopCreateForm(forms.ModelForm):
 
 
 class AddEmployeeForm(forms.Form):
-    username = forms.CharField(
-        max_length=150,
-        label="Логин пользователя",
-        help_text="Существующий логин пользователя",
+    email = forms.EmailField(
+        label="Email пользователя",
+        help_text="Существующий email пользователя",
     )
     role = forms.ChoiceField(choices=Role.choices, initial=Role.EMPLOYEE, label="Роль")
     can_view_stats = forms.BooleanField(required=False, initial=True, label="Доступ к статистике")
@@ -32,19 +31,19 @@ class AddEmployeeForm(forms.Form):
         self.shop = kwargs.pop("shop")
         super().__init__(*args, **kwargs)
 
-    def clean_username(self):
-        username = self.cleaned_data["username"].strip()
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except User.DoesNotExist as exc:
-            raise forms.ValidationError("Пользователь с таким логином не найден") from exc
+            raise forms.ValidationError("Пользователь с таким email не найден") from exc
 
         if self.shop.owner_id == user.id:
             raise forms.ValidationError("Владелец уже закреплен за этим магазином")
-        return username
+        return email
 
     def save(self, invited_by):
-        user = User.objects.get(username=self.cleaned_data["username"])
+        user = User.objects.get(email=self.cleaned_data["email"].strip().lower())
         membership, _ = ShopMembership.objects.update_or_create(
             shop=self.shop,
             user=user,

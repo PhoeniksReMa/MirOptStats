@@ -1,27 +1,48 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 
 from .models import User
 
 
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+class RegisterForm(forms.ModelForm):
+    email = forms.EmailField(label="Email", required=True)
+    password1 = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput,
+        help_text="Пароль должен быть не короче 8 символов",
+    )
+    password2 = forms.CharField(
+        label="Повторите пароль",
+        widget=forms.PasswordInput,
+        help_text="Введите пароль ещё раз для проверки",
+    )
 
-    class Meta(UserCreationForm.Meta):
+    class Meta:
         model = User
-        fields = ("username", "email", "password1", "password2")
+        fields = ("email",)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["username"].label = "Имя пользователя"
-        self.fields["email"].label = "Email"
-        self.fields["password1"].label = "Пароль"
-        self.fields["password2"].label = "Повторите пароль"
-        self.fields["username"].help_text = "Укажите логин для входа"
-        self.fields["password1"].help_text = "Пароль должен быть не короче 8 символов"
-        self.fields["password2"].help_text = "Введите пароль ещё раз для проверки"
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Пользователь с таким email уже существует")
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Пароли не совпадают")
+        return password2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data["email"].strip().lower()
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label="Имя пользователя")
+    username = forms.CharField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")

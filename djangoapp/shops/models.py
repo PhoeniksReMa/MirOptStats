@@ -42,7 +42,7 @@ class Shop(models.Model):
         verbose_name_plural = "магазины"
 
     def __str__(self) -> str:
-        return f"{self.name} (owner: {self.owner.username})"
+        return f"{self.name} (owner: {self.owner.email})"
 
     def has_access(self, user) -> bool:
         if not user or not user.is_authenticated:
@@ -106,4 +106,4 @@ class ShopMembership(models.Model):
         verbose_name_plural = "сотрудники магазинов"
 
     def __str__(self) -> str:
-        return f"{self.user.username} in {self.shop.name} ({self.role})"
+        return f"{self.user.email} in {self.shop.name} ({self.role})"
