@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('invited_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='created_memberships', to=settings.AUTH_USER_MODEL)),
-                ('shop', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='stats.shop')),
+                ('shop', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='memberships', to='shops.shop')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shop_memberships', to=settings.AUTH_USER_MODEL)),
             ],
             options={

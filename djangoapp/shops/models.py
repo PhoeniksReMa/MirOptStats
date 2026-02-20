@@ -1,5 +1,18 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+
+
+class Role(models.TextChoices):
+    ADMIN = "admin", "Admin"
+    MANAGER = "manager", "Manager"
+    EMPLOYEE = "employee", "Employee"
+
+
+class MarketplaceChoice(models.TextChoices):
+    OZON = "ozon", "Ozon"
+    WILDBERRIES = "wildberries", "Wildberries"
+    YANDEX_MARKET = "yandex_market", "Yandex Market"
+    OTHER = "other", "Other"
 
 
 class Shop(models.Model):
@@ -8,6 +21,11 @@ class Shop(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="owned_shops",
+    )
+    marketplace = models.CharField(
+        max_length=40,
+        choices=MarketplaceChoice.choices,
+        default=MarketplaceChoice.OTHER,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -36,11 +54,6 @@ class Shop(models.Model):
 
 
 class ShopMembership(models.Model):
-    class Role(models.TextChoices):
-        ADMIN = "admin", "Admin"
-        MANAGER = "manager", "Manager"
-        EMPLOYEE = "employee", "Employee"
-
     shop = models.ForeignKey(
         Shop,
         on_delete=models.CASCADE,
