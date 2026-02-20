@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Add employee{% endblock %}
+
+{% block content %}
+<h1>Add employee to {{ shop.name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<h2>Current staff</h2>
+{% if memberships %}
+<table>
+    <tr><th>User</th><th>Role</th><th>Can manage staff</th></tr>
+    {% for membership in memberships %}
+    <tr>
+        <td>{{ membership.user.username }}</td>
+        <td>{{ membership.get_role_display }}</td>
+        <td>{{ membership.can_manage_staff|yesno:"Yes,No" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No active staff yet.</p>
+{% endif %}
+{% endblock %}

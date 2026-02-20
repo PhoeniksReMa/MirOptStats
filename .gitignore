@@ -1,2 +1,3 @@
 /venv/
 /.env
+/djangoapp/db.sqlite3
