@@ -9,9 +9,9 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
 
 from .forms import RegisterForm
+from .tasks import send_verification_email_task
 
 logger = logging.getLogger("email.delivery")
 
@@ -36,27 +36,14 @@ def _send_verification_email(request, user):
         {"user": user, "verify_url": verify_url},
     )
     try:
-        sent_count = send_mail(subject, message, None, [user.email], fail_silently=False)
-        if sent_count:
-            logger.info(
-                "Verification email sent: user_id=%s email=%s sent_count=%s",
-                user.id,
-                user.email,
-                sent_count,
-            )
-        else:
-            logger.warning(
-                "Verification email not sent (sent_count=0): user_id=%s email=%s",
-                user.id,
-                user.email,
-            )
+        task = send_verification_email_task.delay(subject, message, user.email)
+        logger.info("Verification email task queued: user_id=%s email=%s task_id=%s", user.id, user.email, task.id)
     except Exception:
         logger.exception(
-            "Verification email send failed: user_id=%s email=%s",
+            "Verification email queue failed: user_id=%s email=%s",
             user.id,
             user.email,
         )
-        raise
 
 
 def register_view(request):
