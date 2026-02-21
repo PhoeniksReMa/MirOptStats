@@ -71,7 +71,7 @@ services:
         condition: service_started
 
   redis:
-    image: redis:7-alpine
+    image: redis
     container_name: miroptstats_redis
     ports:
       - "6379:6379"
