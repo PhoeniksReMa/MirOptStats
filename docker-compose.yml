@@ -4,6 +4,8 @@ services:
     container_name: miroptstats_web
     command: python manage.py runserver 0.0.0.0:8000
     working_dir: /app/djangoapp
+    env_file:
+      - .env
     volumes:
       - ./djangoapp:/app/djangoapp
     ports:
@@ -29,6 +31,8 @@ services:
     container_name: miroptstats_celery_worker
     command: celery -A config worker -l info
     working_dir: /app/djangoapp
+    env_file:
+      - .env
     volumes:
       - ./djangoapp:/app/djangoapp
     environment:
@@ -52,6 +56,8 @@ services:
     container_name: miroptstats_celery_beat
     command: celery -A config beat -l info
     working_dir: /app/djangoapp
+    env_file:
+      - .env
     volumes:
       - ./djangoapp:/app/djangoapp
     environment:
