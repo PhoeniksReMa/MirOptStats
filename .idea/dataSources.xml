@@ -12,7 +12,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://85.198.82.65:32784/miroptstats</jdbc-url>
+      <jdbc-url>jdbc:postgresql://85.198.82.65:32788/miroptstats</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
