@@ -1,0 +1,91 @@
+services:
+  web:
+    build: .
+    container_name: miroptstats_web
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /app/djangoapp
+    volumes:
+      - ./djangoapp:/app/djangoapp
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=miroptstats
+      - DB_USER=miroptstats
+      - DB_PASSWORD=miroptstats
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      - redis
+
+  celery_worker:
+    build: .
+    container_name: miroptstats_celery_worker
+    command: celery -A config worker -l info
+    working_dir: /app/djangoapp
+    volumes:
+      - ./djangoapp:/app/djangoapp
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=miroptstats
+      - DB_USER=miroptstats
+      - DB_PASSWORD=miroptstats
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      - redis
+
+  celery_beat:
+    build: .
+    container_name: miroptstats_celery_beat
+    command: celery -A config beat -l info
+    working_dir: /app/djangoapp
+    volumes:
+      - ./djangoapp:/app/djangoapp
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=miroptstats
+      - DB_USER=miroptstats
+      - DB_PASSWORD=miroptstats
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: miroptstats_redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: miroptstats_postgres
+    environment:
+      - POSTGRES_DB=miroptstats
+      - POSTGRES_USER=miroptstats
+      - POSTGRES_PASSWORD=miroptstats
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker_data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U miroptstats -d miroptstats"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

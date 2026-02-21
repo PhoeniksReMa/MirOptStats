@@ -6,5 +6,6 @@ urlpatterns = [
     path("", RedirectView.as_view(pattern_name="shops:list", permanent=False)),
     path("admin/", admin.site.urls),
     path("auth/", include("account.urls")),
+    path("ozon/", include("ozon.urls")),
     path("shops/", include("shops.urls")),
 ]

@@ -33,6 +33,12 @@ class Shop(models.Model):
         max_length=40,
         verbose_name="Токен",
     )
+    client_id = models.CharField(
+        max_length=32,
+        verbose_name="Client-Id",
+        blank=True,
+        default="",
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлено")
 

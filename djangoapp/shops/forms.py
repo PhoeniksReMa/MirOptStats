@@ -9,10 +9,11 @@ User = get_user_model()
 class ShopCreateForm(forms.ModelForm):
     class Meta:
         model = Shop
-        fields = ("name", "marketplace", "token")
+        fields = ("name", "marketplace", "client_id", "token")
         labels = {
             "name": "Название магазина",
             "marketplace": "Маркетплейс",
+            "client_id": "Client-Id",
             "token": "Токен",
         }
 

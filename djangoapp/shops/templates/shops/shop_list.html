@@ -13,7 +13,14 @@
         <tr>
             <td>{{ shop.name }}</td>
             <td>{{ shop.get_marketplace_display }}</td>
-            <td><a href="{% url 'shops:add_employee' shop.id %}">Сотрудники</a></td>
+            <td>
+                <a href="{% url 'shops:add_employee' shop.id %}">Сотрудники</a> |
+                <a href="{% url 'ozon:report_list' shop.id %}">Ozon отчеты</a> |
+                <form method="post" action="{% url 'shops:sync' shop.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="width:auto; padding:6px 10px;">Обновить данные</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </table>

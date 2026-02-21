@@ -1,0 +1,29 @@
+{% extends 'base_app.html' %}
+{% load ozon_extras %}
+
+{% block title %}{{ report.title }}{% endblock %}
+{% block page_title %}{{ report.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <p>{{ report.description }}</p>
+    {% if rows %}
+    <table>
+        <tr>
+            {% for col in columns %}
+            <th>{{ col.label }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in rows %}
+        <tr>
+            {% for col in columns %}
+            <td>{{ row.data|get_item:col.key }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>Данных пока нет.</p>
+    {% endif %}
+</div>
+{% endblock %}

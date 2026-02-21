@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import AddEmployeeForm, ShopCreateForm
 from .models import Shop
+from ozon.tasks import sync_shop
 
 
 @login_required
@@ -59,3 +60,19 @@ def add_employee_view(request, shop_id):
             "memberships": memberships,
         },
     )
+
+
+@login_required
+def sync_shop_view(request, shop_id):
+    shop = get_object_or_404(Shop, id=shop_id)
+    if not (shop.owner_id == request.user.id or shop.can_manage_staff(request.user)):
+        messages.error(request, "У вас нет прав на обновление данных магазина")
+        return redirect("shops:list")
+    if request.method != "POST":
+        return redirect("shops:list")
+    if not shop.client_id or not shop.token:
+        messages.error(request, "Заполните Client-Id и токен для магазина")
+        return redirect("shops:list")
+    sync_shop.delay(shop.id)
+    messages.success(request, "Обновление данных запущено")
+    return redirect("shops:list")

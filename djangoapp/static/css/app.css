@@ -150,7 +150,7 @@ button:hover { background: var(--primary-dark); }
 .button-link:hover { background: var(--primary-dark); color: #fff; }
 
 table { width: 100%; border-collapse: collapse; }
-th, td { border-bottom: 1px solid #e7edf7; padding: 10px 8px; text-align: left; }
+th, td { border-bottom: 1px solid #e7edf7; padding: 10px 8px; text-align: left; white-space: pre-line; }
 th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
 
 @media (max-width: 900px) {

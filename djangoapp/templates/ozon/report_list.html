@@ -1,0 +1,19 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Ozon отчеты{% endblock %}
+{% block page_title %}Ozon отчеты{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>{{ shop.name }}</h2>
+    {% if reports %}
+    <ul>
+        {% for report in reports %}
+        <li><a href="{% url 'ozon:report_detail' shop.id report.code %}">{{ report.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Отчеты еще не сформированы.</p>
+    {% endif %}
+</div>
+{% endblock %}

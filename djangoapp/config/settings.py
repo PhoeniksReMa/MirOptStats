@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account',
-    'shops',
+    'shops.apps.ShopsConfig',
+    'ozon',
 ]
 
 MIDDLEWARE = [
@@ -76,13 +77,32 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+DB_ENGINE = os.environ.get("DB_ENGINE", "django.db.backends.postgresql")
+DB_NAME = os.environ.get("DB_NAME", "miroptstats")
+DB_USER = os.environ.get("DB_USER", "miroptstats")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "miroptstats")
+DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
+DB_PORT = os.environ.get("DB_PORT", "5432")
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DB_ENGINE == "django.db.backends.sqlite3":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": DB_ENGINE,
+            "NAME": DB_NAME,
+            "USER": DB_USER,
+            "PASSWORD": DB_PASSWORD,
+            "HOST": DB_HOST,
+            "PORT": DB_PORT,
+            "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", "60")),
+        }
+    }
 
 
 # Password validation
@@ -138,3 +158,17 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True") == "True"
 EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "False") == "True"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "no-reply@example.com")
+
+# Celery
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/1")
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_TASK_DEFAULT_QUEUE = os.environ.get("CELERY_TASK_DEFAULT_QUEUE", "default")
+CELERY_BEAT_SCHEDULE = {
+    "ozon-sync-hourly": {
+        "task": "ozon.tasks.sync_all_shops",
+        "schedule": 3600,
+        "options": {"queue": CELERY_TASK_DEFAULT_QUEUE},
+    }
+}
