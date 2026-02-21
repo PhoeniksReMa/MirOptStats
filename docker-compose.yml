@@ -2,6 +2,7 @@ services:
   web:
     build: .
     container_name: miroptstats_web
+    entrypoint: ["sh", "/app/djangoapp/entrypoint.sh"]
     command: python manage.py runserver 0.0.0.0:8000
     working_dir: /app/djangoapp
     env_file:
