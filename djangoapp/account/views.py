@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -10,6 +12,8 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 
 from .forms import RegisterForm
+
+logger = logging.getLogger("email.delivery")
 
 
 class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
@@ -31,7 +35,28 @@ def _send_verification_email(request, user):
         "account/email_verification_email.txt",
         {"user": user, "verify_url": verify_url},
     )
-    send_mail(subject, message, None, [user.email])
+    try:
+        sent_count = send_mail(subject, message, None, [user.email], fail_silently=False)
+        if sent_count:
+            logger.info(
+                "Verification email sent: user_id=%s email=%s sent_count=%s",
+                user.id,
+                user.email,
+                sent_count,
+            )
+        else:
+            logger.warning(
+                "Verification email not sent (sent_count=0): user_id=%s email=%s",
+                user.id,
+                user.email,
+            )
+    except Exception:
+        logger.exception(
+            "Verification email send failed: user_id=%s email=%s",
+            user.id,
+            user.email,
+        )
+        raise
 
 
 def register_view(request):

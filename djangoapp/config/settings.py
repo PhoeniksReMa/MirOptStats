@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from celery.schedules import crontab
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -164,13 +165,13 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "no-reply@example.com"
 # Celery
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/1")
-CELERY_TIMEZONE = TIME_ZONE
+CELERY_TIMEZONE = os.environ.get("CELERY_TIMEZONE", "Europe/Moscow")
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_TASK_DEFAULT_QUEUE = os.environ.get("CELERY_TASK_DEFAULT_QUEUE", "default")
 CELERY_BEAT_SCHEDULE = {
     "ozon-sync-hourly": {
         "task": "ozon.tasks.sync_all_shops",
-        "schedule": 3600,
+        "schedule": crontab(minute=0, hour=8),
         "options": {"queue": CELERY_TASK_DEFAULT_QUEUE},
     }
 }
