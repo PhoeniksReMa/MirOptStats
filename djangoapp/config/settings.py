@@ -175,3 +175,30 @@ CELERY_BEAT_SCHEDULE = {
         "options": {"queue": CELERY_TASK_DEFAULT_QUEUE},
     }
 }
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "%(asctime)s %(levelname)s [%(name)s] %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": os.environ.get("ROOT_LOG_LEVEL", "INFO"),
+    },
+    "loggers": {
+        "email.delivery": {
+            "handlers": ["console"],
+            "level": os.environ.get("EMAIL_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+    },
+}
