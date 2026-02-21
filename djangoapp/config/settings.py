@@ -28,7 +28,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ["85.198.82.65", "localhost", "127.0.0.1", "stat.mir-opt.ru"]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.mir-opt.ru",
+]
 
 # Application definition
 
