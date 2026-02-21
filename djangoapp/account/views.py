@@ -72,6 +72,7 @@ def register_view(request):
             _send_verification_email(request, user)
             messages.success(request, "Check your email to confirm your account.")
             return redirect("account:login")
+        logger.warning("Register form is invalid: errors=%s", form.errors.as_json())
     else:
         form = RegisterForm()
 
